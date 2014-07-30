@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/gwoo/greq"
 )
@@ -34,10 +35,15 @@ func init() {
 	flag.Usage = Usage
 	flag.Parse()
 	setConfig()
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatalf("Cannot get current working directory.")
+	}
+	command := filepath.Join(dir, "goforever")
 	daemon = &Process{
 		Name:    "goforever",
 		Args:    []string{},
-		Command: "goforever",
+		Command: command,
 		Pidfile: config.Pidfile,
 		Logfile: config.Logfile,
 		Errfile: config.Errfile,
